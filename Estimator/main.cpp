@@ -95,7 +95,7 @@ void login()
     std::cin >> strPassword;
     while (user >> username >> password){
         if ((strUser == username) && (strPassword == password)){
-            std::cout << "Login successful! Welcome " << username << "!" << std::endl;
+            std::cout << "Login successful! Welcome " << username << "!\n" << std::endl;
             printMenu();
         }
         if ((strUser != username) && (strPassword != password))
@@ -413,7 +413,7 @@ int calculateTotal (){
     double profit = 0.00;
     double tax = 0.06;
     std::cout << "" << std::endl;
-    std::cout << "What is the profit percentage: ";
+    std::cout << "Profit percentage: ";
     std::cin >> profit;
     costBeforeProfit = (chipsTotal + priceOfEpoxy + priceOfFiller + priceOfGrout + totalPriceOfToeStrip);
     std::cout << " " << std::endl;
@@ -453,8 +453,9 @@ int printMenu()
     
     while (keepLooping)
     {
+        std::cout << "----------------------" << std::endl;
         std::cout << "*** ESTIMATOR ***" << std::endl;
-        std::cout << "----------------------\n" << std::endl;
+        std::cout << "----------------------" << std::endl;
         std::cout << "Pick an option to quote from the menu below:" << std::endl;
         std::cout << "1. Quote straight base" << std::endl;
         std::cout << "2. Quote cove base" << std::endl;
