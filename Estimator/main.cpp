@@ -32,6 +32,8 @@ void openScreen();
 int calcEpoxy(int numMixes);
 int priceFiller(int numMixes);
 int priceGrout(int sqft);
+int calculateTotal();
+
 
 
 // Variables
@@ -51,13 +53,13 @@ int baseHeight = 0;
 double priceOfEpoxy = 25.50;
 double priceOfFiller = 11.10;
 double priceOfGrout = 23.50;
-double priceOfSealer = 34.45;
 double priceOfChips = 25.00;
 double priceOfToeStrip = 2.20;
 double priceOfStraightBase = 10.96;
 double priceOfCoveBase = 13.15;
 double pricePerSQFT = 38.26;
 double chipsTotal = 0.00;
+double totalPriceOfToeStrip = 0.00;
 int chipsRequired = 180;  // # per mix
 
 
@@ -75,6 +77,8 @@ void createProfile()
     newAccount.close();
     openScreen();
 }
+
+
 
 
 // FUNCTION TO LOGIN
@@ -104,6 +108,8 @@ void login()
 }
 
 
+
+
 // OPEN MENU SCREEN TO ALLOW USER TO LOGIN OR CREATE A PROFILE
 void openScreen()
 {
@@ -130,6 +136,8 @@ void openScreen()
     }
     
 }
+
+
 
 
 // MAIN MENU TO CREATE ESTIMATES
@@ -168,6 +176,8 @@ int menu(int menuSelection)
 }
 
 
+
+
 // STRAIGHT BASE CALCULATIONS
 int straightBase(int menuSelection)
 {
@@ -179,9 +189,11 @@ int straightBase(int menuSelection)
     calcEpoxy(numMixes);
     priceFiller(numMixes);
     priceGrout(sqft);
-    calculatePriceOfStrBase(numBasePieces);
+    calculateTotal();
     return menuSelection;
 }
+
+
 
 
 // COVE BASE CALCULATIONS
@@ -196,9 +208,11 @@ int coveBase(int menuSelection)
     priceFiller(numMixes);
     priceGrout(sqft);
     optionalToeStrip(numBasePieces);
-    calculatePriceOfCoveBase(numBasePieces);
+    calculateTotal();
     return menuSelection;
 }
+
+
 
 
 // TREAD RISER COMBO CALCULATIONS
@@ -212,6 +226,8 @@ int treadRiser(int menuSelection)
 }
 
 
+
+
 // TREAD ONLY CALCULATIONS
 int treadOnly(int menuSelection)
 {
@@ -223,6 +239,8 @@ int treadOnly(int menuSelection)
 }
 
 
+
+
 // SLAB CALCULATIONS
 int slab(int menuSelection)
 {
@@ -232,6 +250,8 @@ int slab(int menuSelection)
     calculateSQFT(width, length);
     return menuSelection;
 }
+
+
 
 
 // CALCULATE SQUARE FOOTAGE OF MATERIAL
@@ -249,6 +269,8 @@ int calculateSQFT(int width, int length)
 }
 
 
+
+
 // CALCULATE THE TOTAL NUMBER OF BASE PIECES NEEDED FOR THE JOB
 int calculateNumBasePieces(int length){
     std::cout << "Enter total length needed: ";
@@ -257,6 +279,8 @@ int calculateNumBasePieces(int length){
     std::cout << "Number of pieces: " << numBasePieces << std::endl;
     return 0;
 }
+
+
 
 
 // CALCULATE THE NUMBER OF MIXES NEEDED FOR STRAIGHT BASE
@@ -290,6 +314,8 @@ int calculateNumMixesStraightBase(int linealFeet){
     }
     return 0;
 }
+
+
 
 
 // CALCULATE THE NUMBER OF MIXES NEEDED FOR COVE BASE
@@ -326,15 +352,15 @@ int calculateNumMixesCoveBase(int linealFeet){
 }
 
 
+
+
 // PRICE FILLER
 int priceFiller(int numMixes) {
-    double fillerPrice = 0;
-    fillerPrice = priceOfFiller * numMixes;
+    priceOfFiller = priceOfFiller * numMixes;
     std::cout << "Number of bags of filler: " << numMixes << std::endl;
-    std::cout << "Price of filler: $" << std::fixed << std::setprecision(2) << fillerPrice << std::endl;
+    std::cout << "Price of filler: $" << std::fixed << std::setprecision(2) << priceOfFiller << std::endl;
     return 0;
 }
-
 
 
 
@@ -345,8 +371,8 @@ int optionalToeStrip(int numBasePieces){
     std::cout << "Will the cove base have toe strip?(Y/N) ";
     std::cin >> toeStrip;
     if((toeStrip == 'Y') || (toeStrip =='y')){
-        priceOfToeStrip = numBasePieces * priceOfToeStrip;
-        std::cout << "The price of the toe strip will be: $" << priceOfToeStrip << std::endl;
+        totalPriceOfToeStrip = numBasePieces * priceOfToeStrip;
+        std::cout << "The price of the toe strip will be: $" << totalPriceOfToeStrip << std::endl;
     }
     else if((toeStrip == 'N') || (toeStrip =='n')){
         std::cout << "There are no extra fees added to the cost for toe strip." << std::endl;
@@ -357,6 +383,9 @@ int optionalToeStrip(int numBasePieces){
     }
     return 0;
 }
+
+
+
 
 // PRICE GROUT
 int priceGrout(int sqft){
@@ -374,22 +403,34 @@ int priceGrout(int sqft){
 // CALCULATE PRICE OF TREAD RISER
 
 
-// CALCULATE THE PRICE OF STRAIGHT BASE
-int calculatePriceOfStrBase (int numBasePieces){
+
+
+
+// CALCULATE TOTAL PRICE
+int calculateTotal (){
     double total = 0;
-    total = (numBasePieces * priceOfStraightBase) * 1.06;
-    std::cout << "Total price: $" << std::fixed << std::setprecision(2) << total << std::endl;
+    double costBeforeProfit = 0.00;
+    double profit = 0.00;
+    double tax = 0.06;
+    std::cout << "" << std::endl;
+    std::cout << "What is the profit percentage: ";
+    std::cin >> profit;
+    costBeforeProfit = (chipsTotal + priceOfEpoxy + priceOfFiller + priceOfGrout + totalPriceOfToeStrip);
+    std::cout << " " << std::endl;
+    std::cout << "----------------------" << std::endl;
+    std::cout << "       WRAP UP"         << std::endl;
+    std::cout << "----------------------" << std::endl;
+    std::cout << "Cost before profit: $" << std::fixed << std::setprecision(2) << costBeforeProfit << std::endl;
+    profit = costBeforeProfit * profit;
+    std::cout << "Profit: $" << std::fixed << std::setprecision(2) << profit << std::endl;
+    tax = (costBeforeProfit + profit) * tax;
+    std::cout << "Tax: $" << std::fixed << std::setprecision(2) << tax << std::endl;
+    total = costBeforeProfit + profit + tax;
+    std::cout << "Total cost: $" << std::fixed << std::setprecision(2) << total << std::endl;
+    std::cout << "----------------------\n" << std::endl;
     return 0;
 }
 
-
-// CALCULATE THE PRICE OF COVE BASE
-int calculatePriceOfCoveBase (int numBasePieces){
-    double total = 0;
-    total = ((numBasePieces * priceOfStraightBase) + priceOfToeStrip) * 1.06;
-    std::cout << "Total price: $" << total << std::endl;
-    return 0;
-}
 
 
 // CALCULATE AMOUNT OF EPOXY NEEDED
@@ -401,6 +442,8 @@ int calcEpoxy (int numMixes){
     std::cout << "Total price of epoxy: $" << std::fixed << std::setprecision(2) << priceOfEpoxy << std::endl;
     return 0;
 }
+
+
 
 
 // PRINT MAIN MENU
