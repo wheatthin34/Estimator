@@ -19,8 +19,6 @@ int straightBase(int menuSelection);
 int coveBase(int menuSelection);
 int treadRiser(int menuSelection);
 int treadOnly(int menuSelection);
-int slab(int menuSelection);
-int calculateSQFT(int length, int width);
 int calculateNumBasePieces(int length);
 int calculateNumMixesCoveBase(int linealFeet);
 int calculateNumMixesStraightBase(int linealFeet);
@@ -33,14 +31,17 @@ int calcEpoxy(int numMixes);
 int priceFiller(int numMixes);
 int priceGrout(int sqft);
 int calculateTotal();
+int calculateSteps();
 
 
 
 // Variables
-int thickness = 0;
-int length = 0;
-int width = 0;
+double thickness = 0.00;
+double length = 0.00;
+double width = 0.00;
 int sqft = 0;
+double riserHeight = 0.00;
+int numPieces = 0;
 int linealFeet = 0;
 int numBasePieces = 0;
 int baseLength = 4;
@@ -49,6 +50,7 @@ int fourInchStraightPoured = 108;
 int fourInchCovePoured = 84;
 int sixInchStraightPoured = 72;
 int sixInchCovePoured = 54;
+int linealFeetAsPoured = 0;
 int baseHeight = 0;
 double priceOfEpoxy = 25.50;
 double priceOfFiller = 11.10;
@@ -162,10 +164,6 @@ int menu(int menuSelection)
             break;
             
         case 5:
-            slab(menuSelection);
-            break;
-            
-        case 6:
             std::cout << "Goodbye" << std::endl;
             break;
             
@@ -221,7 +219,11 @@ int treadRiser(int menuSelection)
     std::cout << "----------------------" << std::endl;
     std::cout << "Tread / Riser Combo Quote\n";
     std::cout << "----------------------" << std::endl;
-    calculateSQFT(width, length);
+    calculateSteps();
+    calcEpoxy(numMixes);
+    priceFiller(numMixes);
+    priceGrout(sqft);
+    calculateTotal();
     return menuSelection;
 }
 
@@ -234,37 +236,42 @@ int treadOnly(int menuSelection)
     std::cout << "----------------------" << std::endl;
     std::cout << "Tread Only Quote\n";
     std::cout << "----------------------" << std::endl;
-    calculateSQFT(width, length);
+    calculateSteps();
+    calcEpoxy(numMixes);
+    priceFiller(numMixes);
+    priceGrout(sqft);
+    calculateTotal();
     return menuSelection;
 }
-
-
-
-
-// SLAB CALCULATIONS
-int slab(int menuSelection)
-{
-    std::cout << "----------------------" << std::endl;
-    std::cout << "Slab Quote\n";
-    std::cout << "----------------------" << std::endl;
-    calculateSQFT(width, length);
-    return menuSelection;
-}
-
 
 
 
 // CALCULATE SQUARE FOOTAGE OF MATERIAL
-int calculateSQFT(int width, int length)
+int calculateSteps()
 {
-    std::cout << "Enter length: ";
+    std::cout << "Enter number of pieces: " << std::endl;
+    std::cin >> numPieces;
+    std::cout << "Enter length in inches: " << std::endl;
     std::cin >> length;
-    std::cout << "Enter width: ";
+    std::cout << "Enter width in inches: " << std::endl;
     std::cin >> width;
+    std::cout << "Enter riser height in inches: " << std::endl;
+    std::cin >> riserHeight;
+    std::cout << "Enter thickness in inches(decimal format): " << std::endl;
+    std::cin >> thickness;
     
-    sqft = length * width;
+    linealFeet = ((numPieces * length) / 12) + 1;
+    sqft = (linealFeet * (width + riserHeight)) / 12;
     
+    std::cout << "Total lineal feet: " << linealFeet << std::endl;
     std::cout << "Total squarefootage: " << sqft << " sqft" << std::endl;
+    
+    
+    linealFeetAsPoured = 15 * 1 / thickness;
+    numMixes = (linealFeet / linealFeetAsPoured) + 1;
+    
+    std::cout << "Number of mixes: " << numMixes << std::endl;
+    
     return 0;
 }
 
@@ -400,11 +407,6 @@ int priceGrout(int sqft){
 }
 
 
-// CALCULATE PRICE OF TREAD RISER
-
-
-
-
 
 // CALCULATE TOTAL PRICE
 int calculateTotal (){
@@ -461,8 +463,7 @@ int printMenu()
         std::cout << "2. Quote cove base" << std::endl;
         std::cout << "3. Quote tread/riser combo" << std::endl;
         std::cout << "4. Quote tread only" << std::endl;
-        std::cout << "5. Quote slabs" << std::endl;
-        std::cout << "6. Quit" << std::endl;
+        std::cout << "5. Quit" << std::endl;
         std::cin >> menuSelection;
             
         menu(menuSelection);
